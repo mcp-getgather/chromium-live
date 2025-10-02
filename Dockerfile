@@ -32,4 +32,8 @@ RUN cp /usr/share/novnc/vnc_lite.html /usr/share/novnc/index.html
 RUN sed -i 's/rfb.scaleViewport = readQueryVariable.*$/rfb.scaleViewport = true;/' /usr/share/novnc/index.html
 EXPOSE 3001
 
+RUN useradd -m -s /bin/bash user && chown -R user:user /app
+
+USER user
+
 ENTRYPOINT ["/app/entrypoint.sh"]

@@ -5,7 +5,7 @@ export DISPLAY=:99
 export NO_AT_BRIDGE=1
 export SESSION_MANAGER=""
 export DBUS_SESSION_BUS_ADDRESS=""
-export USER=root
+export USER=user
 
 echo "Starting TigerVNC server on DISPLAY=$DISPLAY..."
 Xvnc -alwaysshared ${DISPLAY} -geometry 1920x1080 -depth 24 -rfbport 5900 -SecurityTypes None &
@@ -17,7 +17,7 @@ eval $(dbus-launch --sh-syntax)
 export SESSION_MANAGER=""
 
 echo "Starting XFCE4..."
-startxfce4 >/dev/null 2>&1 & sleep 1
+startxfce4 >/dev/null 2>&1 & sleep 3
 
 export GTK_THEME="Windows-10"
 echo "Installing desktop theme..."
@@ -45,10 +45,10 @@ if [ ! -d ~/.themes/Windows-10 ] && [ ! -f ~/.themes/*/index.theme ]; then
     xfconf-query -c xfce4-panel -p /panels/panel-1/position -s "p=10;x=0;y=0"
 
     echo "Restarting XFCE to apply new theme..."
-    pkill -f xfsettingsd 2>/dev/null || true; sleep 1; xfsettingsd &
-    pkill -f xfwm4 2>/dev/null || true; sleep 1; xfwm4 --replace &
-    xfce4-panel -r &
-    sleep 1
+    pkill -f xfsettingsd 2>/dev/null || true; sleep 1; DBUS_SESSION_BUS_ADDRESS=$DBUS_SESSION_BUS_ADDRESS xfsettingsd &
+    pkill -f xfwm4 2>/dev/null || true; sleep 1; DBUS_SESSION_BUS_ADDRESS=$DBUS_SESSION_BUS_ADDRESS xfwm4 --replace &
+    pkill -f xfce4-panel 2>/dev/null || true; sleep 1; DBUS_SESSION_BUS_ADDRESS=$DBUS_SESSION_BUS_ADDRESS xfce4-panel &
+    sleep 2
 
     echo "Desktop theme installed!"
 else
