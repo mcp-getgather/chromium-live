@@ -61,7 +61,8 @@ echo "noVNC viewable at http://localhost:3001"
 
 xeyes &
 
-chromium --start-maximized duck.com &
+chromium --start-maximized --remote-debugging-port=9221 duck.com &
+socat TCP-LISTEN:9222,fork,reuseaddr TCP:127.0.0.1:9221 &
 
 # Keep the container running
 while true; do sleep 1; done

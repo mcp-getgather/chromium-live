@@ -19,6 +19,7 @@ RUN apt-get update -y && apt-get install -y --no-install-recommends \
     websockify \
     x11-apps \
     sudo \
+    socat \
     chromium
 
 WORKDIR /app
@@ -32,6 +33,7 @@ EXPOSE 5900
 RUN cp /usr/share/novnc/vnc_lite.html /usr/share/novnc/index.html
 RUN sed -i 's/rfb.scaleViewport = readQueryVariable.*$/rfb.scaleViewport = true;/' /usr/share/novnc/index.html
 EXPOSE 3001
+EXPOSE 9222
 
 RUN useradd -m -s /bin/bash user && \
     chown -R user:user /app && \
