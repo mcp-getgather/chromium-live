@@ -63,9 +63,14 @@ xeyes &
 
 echo "Starting GOST proxy on port 8080..."
 /app/gost -L http://:8080 &
-sleep 1
-curl -x http://127.0.0.1:8080 ip.fly.dev
-echo "GOST proxy is up and running"
+for i in {1..5}; do
+    sleep 2
+    if curl -x http://127.0.0.1:8080 ip.fly.dev; then
+        echo "GOST proxy is up and running"
+        break
+    fi
+    echo "Proxy check: attempt $i failed, retrying in 2 seconds..."
+done
 
 chromium --start-maximized --no-sandbox --remote-debugging-port=9221 --disable-dev-shm-usage --proxy-server="http://127.0.0.1:8080" duck.com &
 socat TCP-LISTEN:9222,fork,reuseaddr TCP:127.0.0.1:9221 &
