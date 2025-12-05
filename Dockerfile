@@ -3,6 +3,7 @@ FROM mirror.gcr.io/library/debian:13-slim
 
 RUN apt-get update -y && apt-get install -y --no-install-recommends \
     curl \
+    gnupg \
     ca-certificates \
     xterm \
     tigervnc-standalone-server \
@@ -22,6 +23,11 @@ RUN apt-get update -y && apt-get install -y --no-install-recommends \
     socat \
     screen \
     chromium
+
+
+RUN curl -fsSL https://pkgs.tailscale.com/stable/debian/trixie.noarmor.gpg | sudo tee /usr/share/keyrings/tailscale-archive-keyring.gpg >/dev/null
+RUN curl -fsSL https://pkgs.tailscale.com/stable/debian/trixie.tailscale-keyring.list | sudo tee /etc/apt/sources.list.d/tailscale.list >/dev/null
+RUN apt-get update -y && apt-get install -y tailscale
 
 WORKDIR /app
 
