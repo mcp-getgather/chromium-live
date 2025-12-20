@@ -23,6 +23,26 @@ export SESSION_MANAGER=""
 echo "Starting XFCE4..."
 startxfce4 >/dev/null 2>&1 & sleep 3
 
+xeyes &
+
+echo "Starting GOST proxy on port 8080..."
+/app/gost -L http://:8080 &
+for i in {1..5}; do
+    sleep 2
+    if curl -x http://127.0.0.1:8080 ip.fly.dev; then
+        echo "GOST proxy is up and running"
+        break
+    fi
+    echo "Proxy check: attempt $i failed, retrying in 2 seconds..."
+done
+
+chromium --start-maximized --no-sandbox --remote-debugging-port=9221 --disable-dev-shm-usage --proxy-server="http://127.0.0.1:8080" duck.com &
+socat TCP-LISTEN:9222,fork,reuseaddr TCP:127.0.0.1:9221 &
+
+echo "VNC server started on port 5900"
+websockify --web /usr/share/novnc/ 3001 localhost:5900 &
+echo "noVNC viewable at http://localhost:3001"
+
 export GTK_THEME="Windows-10"
 echo "Installing desktop theme..."
 if [ ! -d ~/.themes/Windows-10 ] && [ ! -f ~/.themes/*/index.theme ]; then
@@ -58,26 +78,6 @@ if [ ! -d ~/.themes/Windows-10 ] && [ ! -f ~/.themes/*/index.theme ]; then
 else
     echo "Theme already exists, skipping installation"
 fi
-
-echo "VNC server started on port 5900"
-websockify --web /usr/share/novnc/ 3001 localhost:5900 &
-echo "noVNC viewable at http://localhost:3001"
-
-xeyes &
-
-echo "Starting GOST proxy on port 8080..."
-/app/gost -L http://:8080 &
-for i in {1..5}; do
-    sleep 2
-    if curl -x http://127.0.0.1:8080 ip.fly.dev; then
-        echo "GOST proxy is up and running"
-        break
-    fi
-    echo "Proxy check: attempt $i failed, retrying in 2 seconds..."
-done
-
-chromium --start-maximized --no-sandbox --remote-debugging-port=9221 --disable-dev-shm-usage --proxy-server="http://127.0.0.1:8080" duck.com &
-socat TCP-LISTEN:9222,fork,reuseaddr TCP:127.0.0.1:9221 &
 
 # Keep the container running
 while true; do sleep 1; done
