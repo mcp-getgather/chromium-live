@@ -6,17 +6,17 @@ This containerized Chromium desktop runs on Linux and is accessible through any 
 
 Try using Docker:
 ```
-docker run --name chromium-live -p 3001:3001 ghcr.io/mcp-getgather/chromium-live
+docker run --name chromium-live -p 3001:3001 ghcr.io/remotebrowser/chromium-live
 ```
 or Podman:
 ```
-podman run --name chromium-live -p 3001:3001 ghcr.io/mcp-getgather/chromium-live
+podman run --name chromium-live -p 3001:3001 ghcr.io/remotebrowser/chromium-live
 ```
 Then open `localhost:3001` in your browser.
 
 To enable remote control of Chromium via the [Chrome DevTools Protocol](https://chromedevtools.github.io/devtools-protocol/), map port 9222 as well:
 ```
-podman run --name chromium-live -p 3001:3001 -p 9222:9222 ghcr.io/mcp-getgather/chromium-live
+podman run --name chromium-live -p 3001:3001 -p 9222:9222 ghcr.io/remotebrowser/chromium-live
 ```
 
 To configure Chromium's proxy connection (via [GOST](https://gost.run/en)):
