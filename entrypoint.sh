@@ -20,6 +20,10 @@ echo "Starting DBus session"
 eval $(dbus-launch --sh-syntax)
 export SESSION_MANAGER=""
 
+echo "Configuring hosts file for ad blocking..."
+sudo cp /app/hosts /etc/hosts
+wc -l /etc/hosts
+
 echo "Starting XFCE4..."
 startxfce4 >/dev/null 2>&1 & sleep 3
 
