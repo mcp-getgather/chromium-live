@@ -19,11 +19,7 @@ To enable remote control of Chromium via the [Chrome DevTools Protocol](https://
 podman run --name chromium-live -p 7000:80 -p 9222:9222 ghcr.io/remotebrowser/chromium-live
 ```
 
-To configure Chromium's proxy connection (via [GOST](https://gost.run/en)):
-```
-podman exec chromium-live bash -c "sudo pkill gost"
-podman exec chromium-live bash -c "screen -dmS gost /app/gost -L http://:8080 -F http://username:password@proxy"
-```
+Configure Chromium's proxy connection using [Tinyproxy](https://tinyproxy.github.io) (refer to the sample `tinyproxy.conf`).
 
 To test the CDP connection:
 ```

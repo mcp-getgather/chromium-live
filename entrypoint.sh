@@ -24,23 +24,23 @@ echo "Configuring hosts file for ad blocking..."
 sudo cp /app/hosts /etc/hosts
 wc -l /etc/hosts
 
-echo "Starting XFCE4..."
-startxfce4 >/dev/null 2>&1 & sleep 3
-
-xeyes &
-
-echo "Starting GOST proxy on port 8080..."
-/app/gost -L http://:8080 &
+echo "Starting tinyproxy on port 8119..."
+tinyproxy -d -c /app/tinyproxy.conf &
 for i in {1..5}; do
     sleep 2
-    if curl -x http://127.0.0.1:8080 ip.fly.dev; then
-        echo "GOST proxy is up and running"
+    if curl -x http://127.0.0.1:8119 ip.fly.dev; then
+        echo "Tinyproxy is up and running"
         break
     fi
     echo "Proxy check: attempt $i failed, retrying in 2 seconds..."
 done
 
-chromium --start-maximized --no-sandbox --remote-debugging-port=9221 --disable-dev-shm-usage --proxy-server="http://127.0.0.1:8080" duck.com &
+echo "Starting XFCE4..."
+startxfce4 >/dev/null 2>&1 & sleep 3
+
+xeyes &
+
+chromium --start-maximized --no-sandbox --remote-debugging-port=9221 --disable-dev-shm-usage --proxy-server="http://127.0.0.1:8119" duck.com &
 socat TCP-LISTEN:9222,fork,reuseaddr TCP:127.0.0.1:9221 &
 
 echo "VNC server started on port 5900"
